@@ -1,4 +1,4 @@
-# build for the ios simulator (Apple Silicon)
+# build for iOS Simulator (arm64 - Apple Silicon Macs)
 
 [binaries]
 cpp = ['clang++', '-arch', 'arm64', '-isysroot', '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk']
@@ -10,8 +10,8 @@ root = '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.pla
 has_function_printf = true
 
 [built-in options]
-cpp_args = ['-mios-simulator-version-min=11.0']
-cpp_link_args = ['-mios-simulator-version-min=11.0']
+cpp_args = ['-mios-simulator-version-min=13.0']
+cpp_link_args = ['-mios-simulator-version-min=13.0']
 
 [host_machine]
 system = 'darwin'
