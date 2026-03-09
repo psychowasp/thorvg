@@ -9,6 +9,12 @@ REM           arch = x64 (default), arm64, or all
 set ROOT_DIR=%~dp0
 set BUILD_ROOT=%ROOT_DIR%build_windows
 set OUTPUT_DIR=%ROOT_DIR%output
+
+REM Remove Strawberry Perl from PATH — its ccache intercepts cl.exe
+set "PATH=%PATH:C:\Strawberry\c\bin;=%"
+set "PATH=%PATH:C:\Strawberry\perl\site\bin;=%"
+set "PATH=%PATH:C:\Strawberry\perl\bin;=%"
+
 set MESON_COMMON=--vsenv --buildtype=release --default-library=static -Dthreads=true -Dbindings=capi -Dloaders=svg,lottie,ttf -Dextra=lottie_exp
 
 set ARCH=%1
@@ -52,9 +58,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
-ninja -C "%_BUILD_DIR%"
+meson compile -C "%_BUILD_DIR%"
 if errorlevel 1 (
-    echo FAILED: ninja build for %_ARCH%
+    echo FAILED: meson compile for %_ARCH%
     exit /b 1
 )
 
