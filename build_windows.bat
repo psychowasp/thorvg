@@ -9,7 +9,7 @@ REM           arch = x64 (default), arm64, or all
 set ROOT_DIR=%~dp0
 set BUILD_ROOT=%ROOT_DIR%build_windows
 set OUTPUT_DIR=%ROOT_DIR%output
-set MESON_COMMON=--buildtype=release --default-library=static -Dthreads=true -Dbindings=capi -Dloaders=svg,lottie,ttf -Dextra=lottie_exp
+set MESON_COMMON=--vsenv --buildtype=release --default-library=static -Dthreads=true -Dbindings=capi -Dloaders=svg,lottie,ttf -Dextra=lottie_exp
 
 set ARCH=%1
 if "%ARCH%"=="" set ARCH=x64
