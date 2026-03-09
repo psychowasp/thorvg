@@ -1,5 +1,8 @@
 build
+build_multiplatform
+build_windows
 builddir
+output
 doc
 .vscode
 .idea
