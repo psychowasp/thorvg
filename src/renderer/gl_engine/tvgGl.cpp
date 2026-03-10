@@ -142,8 +142,15 @@ static void* _libGL = nullptr;
 
 static bool _glLoad()
 {
+#ifdef THORVG_GL_TARGET_GLES
+    // ANGLE GLES on Apple (OpenGL ES → Metal translation)
+    if (!_libGL) _libGL = dlopen("libGLESv2.dylib", RTLD_LAZY);
+    if (!_libGL) _libGL = dlopen("@rpath/libGLESv2.dylib", RTLD_LAZY);
+#else
+    // Native OpenGL (deprecated on Apple)
     if (!_libGL) _libGL = dlopen("/Library/Frameworks/OpenGL.framework/OpenGL", RTLD_LAZY);
     if (!_libGL) _libGL = dlopen("/System/Library/Frameworks/OpenGL.framework/OpenGL", RTLD_LAZY);
+#endif
     if (_libGL) return true;
     TVGERR("GL_ENGINE", "Cannot find gl library.");
     return false;
@@ -851,8 +858,15 @@ bool glInit()
         tvgEglGetCurrentContext = (PFNEGLGETCURRENTCONTEXTPROC)GetProcAddress(_libEGL, "eglGetCurrentContext");
         tvgEglMakeCurrent = (PFNEGLMAKECURRENTPROC)GetProcAddress(_libEGL, "eglMakeCurrent");
     #else
-        if (!_libEGL) _libEGL = dlopen("libEGL.so.1", RTLD_LAZY);
-        if (!_libEGL) _libEGL = dlopen("libEGL.so", RTLD_LAZY);
+        #if defined(__APPLE__) || defined(__MACH__)
+            // ANGLE on Apple: .dylib
+            if (!_libEGL) _libEGL = dlopen("libEGL.dylib", RTLD_LAZY);
+            if (!_libEGL) _libEGL = dlopen("@rpath/libEGL.dylib", RTLD_LAZY);
+        #else
+            // Linux / Android: .so
+            if (!_libEGL) _libEGL = dlopen("libEGL.so.1", RTLD_LAZY);
+            if (!_libEGL) _libEGL = dlopen("libEGL.so", RTLD_LAZY);
+        #endif
         if (!_libEGL) {
             TVGERR("GL_ENGINE", "Cannot find EGL library.");
             return false;
